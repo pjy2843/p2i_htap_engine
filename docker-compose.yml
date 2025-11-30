@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  kafka-cluster:
+    container_name: kafka-cluster
+    image: landoop/fast-data-dev:2.3.0
+    environment:
+      ADV_HOST: 127.0.0.1
+      RUNTESTS: 0
+      CONNECTORS: iceberg-sink,jdbc-source
+      S3_BUCKET_NAME: "vldb-000"
+      AWS_ACCESS_KEY_ID: "DUMMY_ACCESS_KEY_ID"
+      AWS_SECRET_ACCESS_KEY: "DUMMY_SECRET_KEY_VALUE"
+      AWS_REGION: "ap-northeast-2"
+    ports:
+      - 2181:2181
+      - 3030:3030
+      - 8081-8083:8081-8083
+      - 9581-9585:9581-9585
+      - 9092:9092
+    volumes:
+      - ./connect-plugins:/connectors/
+    depends_on:
+      - postgres
+      - iceberg-rest
+
+  kafka-connect:
+    container_name: kafka-connect
+    image: confluentinc/cp-kafka-connect:latest
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka-cluster:9092
+      CONNECT_REST_PORT: 8086
+      CONNECT_GROUP_ID: "connect-cluster"
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
+      CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "connect-statuses"
+      CONNECT_PLUGIN_PATH: "/connectors"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+    ports:
+      - 8086:8083
+    volumes:
+      - ./connect-plugins:/connectors/
+    depends_on:
+      - kafka-cluster
+      - iceberg-rest
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: wnsdud318
+      POSTGRES_DB: benchbase
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  iceberg-rest:
+    image: tabulario/iceberg-rest
+    container_name: iceberg-rest
+    ports:
+      - "8181:8181"
+    environment:
+      CATALOG_NAME: default
+      WAREHOUSE_LOCATION: s3a://vldb-000/
+      AWS_ACCESS_KEY_ID: "DUMMY_ACCESS_KEY_ID"
+      AWS_SECRET_ACCESS_KEY: "DUMMY_SECRET_KEY_VALUE"
+      AWS_REGION: "ap-northeast-2"
+      REST_AUTH_TYPE: basic
+      REST_AUTH_BASIC_USER: admin
+      REST_AUTH_BASIC_PASSWORD: password
+    depends_on:
+      - aws-s3
+
+  aws-s3:
+    image: localstack/localstack:latest
+    container_name: aws-s3
+    environment:
+      SERVICES: s3
+      AWS_ACCESS_KEY_ID: "DUMMY_ACCESS_KEY_ID"
+      AWS_SECRET_ACCESS_KEY: "DUMMY_SECRET_KEY_VALUE"
+      AWS_REGION: "ap-northeast-2"
+    ports:
+      - "4572:4572"

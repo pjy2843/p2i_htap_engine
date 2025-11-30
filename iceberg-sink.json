@@ -1,0 +1,19 @@
+{
+  "name": "iceberg-sink",
+  "config": {
+    "connector.class": "io.tabular.iceberg.connect.IcebergSinkConnector",
+    "tasks.max": "1",
+    "topics": "postgres-",
+    "iceberg.tables": "iceberg.customer",
+    "iceberg.catalog.type": "glue",
+    "iceberg.catalog.io-impl": "org.apache.iceberg.aws.s3.S3FileIO",
+    "iceberg.catalog.warehouse": "s3a://vldb-000/",
+    "iceberg.catalog.client.region": "ap-northeast-2",
+    "iceberg.catalog.s3.access-key-id": "DUMMY_ACCESS_KEY_ID",
+    "iceberg.catalog.s3.secret-access-key": "DUMMY_SECRET_KEY_VALUE",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "max.poll.records": 5
+  }
+}

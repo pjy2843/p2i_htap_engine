@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "/home/vldb/jun/p2i/build/Release/AnyBlob",
+    "files.associations": {
+        "iostream": "cpp"
+    }
+}

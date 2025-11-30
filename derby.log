@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon Feb 03 16:22:06 KST 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0194-cab0-19f3-000002574e00 
+on database directory /Users/vldb/Downloads/석사학위논문/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5ffd2b27 
+Loaded from file:/Users/vldb/Downloads/%ec%84%9d%ec%82%ac%ed%95%99%ec%9c%84%eb%85%bc%eb%ac%b8/myenv/lib/python3.13/site-packages/pyspark/jars/derby-10.14.2.0.jar
+java.vendor=Homebrew
+java.runtime.version=17.0.13+0
+user.dir=/Users/vldb/Downloads/석사학위논문
+os.name=Mac OS X
+os.arch=x86_64
+os.version=15.1.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
