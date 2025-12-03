@@ -16,6 +16,7 @@ permissions:
 jobs:
   run-experiment:
     runs-on: ubuntu-latest
+    environment: copilot
     steps:
       - name: Checkout
         uses: actions/checkout@v4
