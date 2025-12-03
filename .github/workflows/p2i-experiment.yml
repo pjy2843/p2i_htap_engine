@@ -24,7 +24,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.ap-northeast-2 }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -39,8 +39,8 @@ jobs:
       - name: Run migration dry-run
         env:
           PG_DSN: ${{ secrets.PG_DSN }}
-          S3_BUCKET: ${{ secrets.vldb-000 }}
-          AWS_REGION: ${{ secrets.ap-northeast-2}}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           echo "Starting migration dry-run"
           python3 migration_improved.py
@@ -55,8 +55,8 @@ jobs:
       - name: Run small hybrid benchmark (optional)
         env:
           PG_DSN: ${{ secrets.PG_DSN }}
-          AWS_REGION: ${{ secrets.ap-northeast-2 }}
-          S3_BUCKET: ${{ secrets.vldb-000 }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
         run: |
           echo "Running small hybrid benchmark (short)"
           python3 bench/run_hybrid_benchmark.py
